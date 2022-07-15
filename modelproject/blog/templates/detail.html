@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+  {% block content %}
+      <h1>{{ blog.title }}</h1>
+      <p>{{ blog.pub_date }}</p>
+      <p>{{ blog.body }}</p>
+        {% if blog.image %}
+        <img src="{{blog.image.url}}" alt="" /></br>
+        {% endif %}
+      <a href="{% url 'blog:update' blog.id %}" style="color: rgb(141, 150, 159)">수정하기</a>
+      <a href="{% url 'home' %}" style="color: rgb(141, 150, 159)">돌아가기</a>
+      <a href="{% url 'blog:delete' blog.id%}" style="color: rgb(141, 150, 159)">Delete Post</a>
+    </div>
+    <hr>
+    <div class="comments">
+      <br><br>
+      <form action="{% url 'blog:comments_create' blog.id %}" method="POST">
+        {% csrf_token %}
+        {% if request.user.is_authenticated %}
+        <b>{{ request.user }}</b> >
+        {% else %}
+        <b>익명</b> >
+        {% endif %}
+        {{ comment_form }}
+        <input type="submit" value = "댓글 입력">
+        </form>
+        {% if comments %}
+      <br><br>
+      {% endif %}
+      <br><br>
+
+    {% for comment in comments %}
+    <div class="comment">
+    {% if request.user == comment.user %}
+    <p><b><span style="color: rgb(141, 150, 159)">{{comment.user}}</b> ({{comment.created_time}}):  <b>{{ comment.content }}</b></p>
+    <a href="{% url 'blog:comments_delete' blog.id comment.id %}" style="font-size: 12; color:rgb(141, 150, 159); float:right">delete</a></p>
+    {% elif comment.user %}
+    <p><b>{{comment.user}}</b> ({{comment.created_time}}):  <b>{{ comment.content }}</b></p>
+    {% else %}
+    <p><b>익명</b> ({{comment.created_time}}): <b>{{ comment.content }}</b></p>
+    {% endif %}
+    <br></div><br>
+    {% endfor %}
+    </div>
+  {% endblock %}

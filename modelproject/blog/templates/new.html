@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+  {% block content %}
+  {% if user.is_authenticated %}
+    <h1>새로운 글 작성</h1>
+    <form action="{% url 'blog:create'%}" method="post" enctype="multipart/form-data">
+      {%csrf_token%}
+      <p>제목: <input type="text" name="title" /></p>
+      <p>작성자: <input type="text" name="writer" /></p>
+      <p>사진: <input type="file" name="image" /></p>
+      본문: <br /><textarea name="body" id="" cols="30" rows="10"></textarea
+      ><br />
+      <button type="submit">작성하기</button>
+    </form>
+    {% else %}
+    <body>
+        <br><br>
+        <div class="unknown">
+        <h2>로그인이 필요한 페이지입니다.</h2></br>
+        <a href="{% url 'account:login' %}" style="color:rgb(141, 150, 159)">로그인하기</a>
+        <a href="{% url 'home' %}" style="color:rgb(141, 150, 159)">돌아가기</a><br><br>
+        <a href="{% url 'account:signup' %}" style="color:rgb(141, 150, 159)">회원가입하기</a>
+      </div>
+      </body>
+    {% endif %}  
+  {% endblock %}

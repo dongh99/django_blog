@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+  {% block content %}
+  <style>
+    .hello{
+      margin-bottom: 10px;
+    }
+    .write{
+      padding-right:150px;
+      margin-left: 200px;
+      margin-right:200px;
+      border-style: solid;
+      border-color: black;
+      border-radius: 1%;
+      background-color: rgb(250, 243, 234);
+    }
+    .search{
+      margin-top: 50px;
+    }
+  </style>
+  <h2>Lion's Blog</h2>
+  <div class="hello">
+    {% if user.is_authenticated %}
+      {{user.location}}에 사는 {{user.university}} 다니는 {{user.nickname}}님 안녕하세요!
+    {% endif %}
+  </div>
+
+    
+    {% for blog in blogs%}
+    <div class = 'write'>
+      <div style="display:inline-block;vertical-align:top;">
+        <a href="{% url 'blog:detail' blog.id %}"><img src="{{blog.image.url}}" alt="" style="max-width:170px; margin-left:100px; float:left"></a>
+      </div>
+      <div style="display:inline-block; padding-top: 10px;">
+        <h3><b>&nbsp;{{ blog.title }}</b></h3>
+        <b>작성자:</b> {{ blog.writer }} / <b>작성내용:</b> {{ blog.summary }} </br>
+        <a href="{% url 'blog:detail' blog.id %}" style="color: lightslategrey">&nbsp;...more</a>
+      </div>
+    </div>
+  </br>
+    {% endfor %}
+
+    <div class="'search" style="margin-top: 10px">
+      <form action="{% url 'home' %}">
+        <p>제목으로 게시글 검색</p>
+        <input type="text" name="query">
+      </form>
+    </div>
+
+    <br/>
+
+    <div class="paginator">
+      {% if blogs.has_previous %}
+      <a href="?page=1" style="color: lightslategrey">처음</a>
+      <a href="?page={{blogs.previous_page_number}}" style="color: lightslategrey">이전</a>
+      {% endif %}
+      <span>{{blogs.number}}</span>
+      <span>of</span>
+      <span>{{blogs.paginator.num_pages}}</span>
+      {% if blogs.has_next %}
+      <a href="?page={{blogs.next_page_number}}" style="color: lightslategrey">다음</a>
+      <a href="?page={{blogs.paginator.num_pages}}" style="color: lightslategrey">마지막</a>
+      {% endif %}
+    </div>
+  {% endblock %}
